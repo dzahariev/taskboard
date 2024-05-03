@@ -1,0 +1,43 @@
+version: '3'
+
+networks:
+  taskboard-network:
+
+services:
+  keycloak:
+    image: keycloak/keycloak:23.0.4
+    restart: always
+    hostname: keycloak
+    ports:
+      - "8086:8086"
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_HOSTNAME=keycloak
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    command: ["start-dev", "--import-realm", "--http-port", "8086"]
+    networks:
+      - taskboard-network
+
+  taskboard:
+    build:
+      context: .
+      target: release
+    hostname: taskboard
+    ports:
+      - "8800:8800"
+    environment:
+      - AUTH_URL=${AUTH_URL}
+      - AUTH_REALM=${AUTH_REALM}
+      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
+      - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET}
+      - API_PORT=8800
+      - API_PATH=/api/
+    volumes:
+      - "./tasks:/tasks"
+    depends_on:
+      - keycloak
+    command: ["/main"]
+    networks:
+      - taskboard-network
