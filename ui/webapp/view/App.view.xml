@@ -24,28 +24,6 @@
 					level="H2"/>
 				<ToolbarSpacer/>
 				<Button
-					id="errorButton"
-					icon="sap-icon://message-popup"
-					visible="{= ${alerts>/alerts/errors}.length === 0 ? false : true }"
-					type="Transparent"
-					press=".onMessagePopoverPress"
-					tooltip="{i18n>errorButtonTooltip}">
-					<layoutData>
-						<OverflowToolbarLayoutData closeOverflowOnInteraction="false"/>
-					</layoutData>
-				</Button>
-				<Button
-					id="notificationButton"
-					icon="sap-icon://ui-notifications"
-					visible="{= ${alerts>/alerts/notifications}.length === 0 ? false : true }"
-					type="Transparent"
-					press=".onNotificationPress"
-					tooltip="{i18n>notificationButtonTooltip}">
-					<layoutData>
-						<OverflowToolbarLayoutData closeOverflowOnInteraction="false"/>
-					</layoutData>
-				</Button>
-				<Button
 					id="userButton"
 					text="{authModel>/username}"
 					type="Transparent"
@@ -93,7 +71,7 @@
 							text="{path: 'side>titleI18nKey', formatter: '.getBundleText'}"
 							icon="{side>icon}"
 							key="{side>key}"
-							href="#/{side>key}">
+							href="{side>key}">
 						</tnt:NavigationListItem>
 					</tnt:NavigationList>
 				</tnt:fixedItem>

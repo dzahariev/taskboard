@@ -32,9 +32,9 @@ sap.ui.define([
 				tasks: null,
 			})
 			this.taskModel.setSizeLimit(Number.MAX_VALUE);
-			this.setModel(this.taskModel, "task");
+			this.setModel(this.taskModel, "tasks");
 			this.loadData()
-			this.getView().setModel(this.taskModel, "task");
+			this.getView().setModel(this.taskModel, "tasks");
 		},
 
 		onExit: function() {
@@ -53,8 +53,20 @@ sap.ui.define([
 			return JSON.stringify(anyData, null, 2)
 		},
 
+		create: async function () {
+			alert("Create New")
+		},
+
+		delete: async function (oEvent) {
+			const task = oEvent
+					.getSource()
+					.getBindingContext("tasks")
+					.getObject();
+			alert("Delete " + task.id)
+		},
+
 		loadData: async function () {
-			const taskModel = this.getModel("task")
+			const taskModel = this.getModel("tasks")
 			const token = await this.getOwnerComponent().getToken()
 			var strResponse = "";
 			jQuery.ajax({
@@ -70,7 +82,7 @@ sap.ui.define([
 			  });
 	
 			taskModel.setProperty("/tasks", strResponse.data);
-			this.getView().getModel("task").refresh(true);
+			this.getView().getModel("tasks").refresh(true);
 		}
 	});
 });
