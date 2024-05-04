@@ -16,4 +16,3 @@ mv ${LIB_PATH}/package ${LIB_PATH}/keycloak-js
 rm -fR  ${LIB_PATH}/keycloak-js.old
 
 echo "Done, keycloak-js was updated to ${TAG_NAME}"
-

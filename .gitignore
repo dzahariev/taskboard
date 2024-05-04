@@ -27,3 +27,4 @@ tasks/*
 # Node dependencies
 package-lock.json
 node_modules
+keycloak-js
