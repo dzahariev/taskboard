@@ -26,7 +26,7 @@
 						<ToolbarSpacer/>
 						<Button
 							id="new"
-							icon="sap-icon://create"
+							icon="sap-icon://add-document"
 							press=".create"
 							tooltip="{i18n>new}"/>
 						<Button
@@ -49,13 +49,16 @@
 									fixedLayout="false">
 									<columns>
 										<Column>
-											<Text text="{i18n>taskFieldID}"/>
+											<Text text="{i18n>taskFieldKind}"/>
 										</Column>
 										<Column>
 											<Text text="{i18n>taskFieldStatus}"/>
 										</Column>
 										<Column>
-											<Text text="{i18n>taskFieldKind}"/>
+											<Text text="{i18n>taskFieldID}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>taskFieldProgress}"/>
 										</Column>
 										<Column>
 											<Text text="{i18n>taskFieldProperties}"/>
@@ -67,9 +70,15 @@
 									<items>
 										<ColumnListItem>
 											<cells>
-												<Text text="{tasks>id}"/>
-												<Text text="{tasks>status}"/>
-												<Text text="{tasks>kind}"/>
+												<core:Icon src="{parts: ['tasks>kind'], formatter: '.kindIcon'}"/>
+												<core:Icon src="{parts: ['tasks>status'], formatter: '.statusIcon'}"/>
+												<Text text="{tasks>id}" renderWhitespace="true"/>
+												<ProgressIndicator
+													class="sapUiSmallMarginBottom"
+													percentValue="{tasks>progress}"
+													displayValue="{tasks>progress}%"
+													showValue="true"
+													state="None" />
 												<Text text="{parts: ['tasks>properties'], formatter: '.propertiesAsJSON'}" renderWhitespace="true"/>
 												<Button icon="sap-icon://delete" tooltip="{i18n>delete}" press=".delete"/>
 											</cells>

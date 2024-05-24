@@ -53,6 +53,29 @@ sap.ui.define([
 			return JSON.stringify(anyData, null, 2)
 		},
 
+		statusIcon: function(anyData) {
+			if (anyData.toUpperCase() === "new".toUpperCase()) {
+				return "sap-icon://create"
+			} 
+			if (anyData.toUpperCase() === "working".toUpperCase()) {
+				return "sap-icon://physical-activity"
+			} 
+			if (anyData.toUpperCase() === "done".toUpperCase()) {
+				return "sap-icon://complete"
+			} 
+			return "sap-icon://product"
+		},
+
+		kindIcon: function(anyData) {
+			if (anyData.toUpperCase() === "backup".toUpperCase()) {
+				return "sap-icon://synchronize"
+			} 
+			if (anyData.toUpperCase() === "handbrake".toUpperCase()) {
+				return "sap-icon://video"
+			} 
+			return "sap-icon://action-settings"
+		},
+
 		create: async function () {
 			alert("Create New")
 		},
@@ -62,7 +85,19 @@ sap.ui.define([
 					.getSource()
 					.getBindingContext("tasks")
 					.getObject();
-			alert("Delete " + task.id)
+			if (confirm("Delete " + task.id + "?") == true) {
+				const token = await this.getOwnerComponent().getToken()
+				const url = '/api/task/'+ task.id
+				jQuery.ajax({
+					url: url,
+					type: "DELETE",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+					},
+					async:false
+				});
+				this.loadData();
+			}
 		},
 
 		loadData: async function () {
@@ -79,7 +114,7 @@ sap.ui.define([
 					strResponse = response;
 				},
 				async:false
-			  });
+			});
 	
 			taskModel.setProperty("/tasks", strResponse.data);
 			this.getView().getModel("tasks").refresh(true);

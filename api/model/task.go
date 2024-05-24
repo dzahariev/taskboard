@@ -2,10 +2,13 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 
 	"github.com/gofrs/uuid/v5"
 )
@@ -18,6 +21,7 @@ const (
 type Task struct {
 	ID         uuid.UUID         `json:"id"`
 	Status     string            `json:"status"`
+	Progress   string            `json:"progress"`
 	Kind       string            `json:"kind"`
 	Properties map[string]string `json:"properties"`
 }
@@ -28,16 +32,46 @@ func (t *Task) Count() (int64, error) {
 	return 0, nil
 }
 
-// FindByID returns an objects with corresponding ID if exists
-func (t *Task) FindByID(uid uuid.UUID) error {
-	// TODO
-	return nil
+func (t *Task) fileName() string {
+	fileName := fmt.Sprintf("%s/%s.%s", TASKS_PATH, t.ID.String(), "json")
+	fileName = filepath.FromSlash(fileName)
+	return fileName
+}
+
+// Load returns an object
+func (t *Task) Load() error {
+	if _, err := os.Stat(t.fileName()); errors.Is(err, fs.ErrNotExist) {
+		return fmt.Errorf("not found")
+	} else {
+		fileContent, err := os.ReadFile(t.fileName())
+		if err != nil {
+			return fmt.Errorf("file cannot be read: %s", t.fileName())
+		}
+		var currentTask Task
+		err = json.Unmarshal(fileContent, &currentTask)
+		if err != nil {
+			return fmt.Errorf("file cannot be parsed: %s", t.fileName())
+		}
+		t.ID = currentTask.ID
+		t.Status = currentTask.Status
+		t.Progress = currentTask.Progress
+		t.Kind = currentTask.Kind
+		t.Properties = currentTask.Properties
+		return nil
+	}
 }
 
 // Delete is removing existing objects
 func (t *Task) Delete() error {
-	// TODO
-	return nil
+	if _, err := os.Stat(t.fileName()); errors.Is(err, fs.ErrNotExist) {
+		return fmt.Errorf("not found")
+	} else {
+		err := os.Remove(t.fileName())
+		if err != nil {
+			return fmt.Errorf("file cannot be deleted: %s", t.fileName())
+		}
+		return nil
+	}
 }
 
 // Save saves the structure as new object
@@ -51,9 +85,7 @@ func (t *Task) Save() error {
 	if err != nil {
 		return err
 	}
-
-	// TODO Create object
-	return nil
+	return t.saveInternal()
 }
 
 // Validate checks structure consistency
@@ -117,8 +149,17 @@ func (t *Task) Update() error {
 	if err != nil {
 		return err
 	}
+	return t.saveInternal()
+}
 
-	// TODO Update
-
+func (t *Task) saveInternal() error {
+	bytes, err := json.Marshal(t)
+	if err != nil {
+		return fmt.Errorf("task cannot be serialized")
+	}
+	err = os.WriteFile(t.fileName(), bytes, 0644)
+	if err != nil {
+		return fmt.Errorf("cannot write to file")
+	}
 	return nil
 }

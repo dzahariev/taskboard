@@ -75,8 +75,10 @@ func (server *Server) GetTask(w http.ResponseWriter, r *http.Request) {
 		server.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
-	task := model.Task{}
-	err = task.FindByID(uid)
+	task := model.Task{
+		ID: uid,
+	}
+	err = task.Load()
 	if err != nil {
 		server.ERROR(w, http.StatusNotFound, err)
 		return
@@ -133,9 +135,10 @@ func (server *Server) DeleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = task.FindByID(uid)
+	task.ID = uid
+	err = task.Load()
 	if err != nil {
-		server.ERROR(w, http.StatusInternalServerError, err)
+		server.ERROR(w, http.StatusNotFound, err)
 		return
 	}
 
