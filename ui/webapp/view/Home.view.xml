@@ -27,7 +27,7 @@
 						<Button
 							id="new"
 							icon="sap-icon://add-document"
-							press=".create"
+							press=".createNew"
 							tooltip="{i18n>new}"/>
 						<Button
 							id="refresh"

@@ -40,7 +40,9 @@ sap.ui.define([
 			this.taskModel.setSizeLimit(Number.MAX_VALUE);
 			this.setModel(this.taskModel, "tasks");
 			this.loadData()
-			this.getView().setModel(this.taskModel, "tasks");
+
+			this.oView = this.getView();
+			this.oView.setModel(this.taskModel, "tasks");
 		},
 
 		onExit: function() {
@@ -82,73 +84,51 @@ sap.ui.define([
 			return "sap-icon://action-settings"
 		},
 
-		create: async function () {
+		closeDialog: function () {
+			this.oDialog.close();
+		},
+
+		onSave: async function () {
 			const token = await this.getOwnerComponent().getToken();
 			const url = '/api/task'
-			if (!this.oCreateDialog) {
-				this.oCreateDialog = new sap.m.Dialog({
-					title: "Create new Task",
-					content: [
-						new sap.m.Label({text:"Task Kind:"}),
-						new sap.m.ComboBox({
-							selectedKey: "handbrake",
-							items: [
-								new sap.ui.core.Item({key: "handbrake", text: "handbrake"}), 
-								new sap.ui.core.Item({key: "backup", text: "backup"})
-							], 
-							id: "KIND_COMBOBOX"
-						}),
-						new sap.m.Label({text:"From:"}),
-						new sap.m.Input({maxLength: 150, id: "FROM_INPUT"}),
-						new sap.m.Label({text:"To:"}),
-						new sap.m.Input({maxLength: 150, id: "TO_INPUT"}),
-						new sap.m.Label({text:"Additional property:"}),
-						new sap.m.Input({maxLength: 50, id: "ADDITIONAL_INPUT"})
-					],
-					beginButton: new sap.m.Button({
-						type: ButtonType.Emphasized,
-						text: "Create",
-						press: function () {
-							const kindFieldValue = sap.ui.getCore().byId("KIND_COMBOBOX").getSelectedItem().getText();
-							const fromFieldValue = sap.ui.getCore().byId("FROM_INPUT").getValue();
-							const toFieldValue = sap.ui.getCore().byId("TO_INPUT").getValue();
-							const additionalFieldValue = sap.ui.getCore().byId("ADDITIONAL_INPUT").getValue();
-							jQuery.ajax({
-								url: url,
-								type: "POST",
-								contentType: 'application/json',
-								data: JSON.stringify({
-										"status": "new",
-										"progress": "0",
-										"kind": kindFieldValue,
-										"properties": {
-											"from": fromFieldValue, 
-											"to": toFieldValue, 
-											"additional": additionalFieldValue
-										}
-								 }),
-								beforeSend: function (xhr) {
-									xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-								},
-								async:false
-							});
-							this.oCreateDialog.close();
-							this.loadData();	
-						}.bind(this)
+
+			const kindFieldValue = this.oView.byId("KIND_COMBOBOX").getSelectedItem().getKey();
+			const fromFieldValue = this.oView.byId("FROM_INPUT").getValue();
+			const toFieldValue = this.oView.byId("TO_INPUT").getValue();
+			const presetFieldValue = this.oView.byId("PRESET_COMBOBOX").getSelectedItem().getKey();
+			jQuery.ajax({
+				url: url,
+				type: "POST",
+				contentType: 'application/json',
+				data: JSON.stringify({
+						"status": "new",
+						"progress": "0",
+						"kind": kindFieldValue,
+						"properties": {
+							"from": fromFieldValue, 
+							"to": toFieldValue, 
+							"preset": presetFieldValue
+						}
 					}),
-					endButton: new sap.m.Button({
-						text: "Close",
-						press: function () {
-							this.oCreateDialog.close();
-						}.bind(this)
-					})
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+				},
+				async:false
+			});
+			this.closeDialog();
+			this.loadData();	
+		},
+		
+		createNew: function () {
+			if (!this.oCreateDialog) {
+				this.oCreateDialog = this.loadFragment({
+					name: "com.zahariev.taskboard.view.CreateDialog"
 				});
-
-				// to get access to the controller's model
-				this.getView().addDependent(this.oCreateDialog);
 			}
-
-			this.oCreateDialog.open();
+			this.oCreateDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
 		},
 
 		delete: async function (oEvent) {
@@ -156,8 +136,8 @@ sap.ui.define([
 			const token = await this.getOwnerComponent().getToken();
 			const url = '/api/task/'+ task.id
 			MessageBox.confirm("Delete " + task.id + "?", {
-				actions: [MessageBox.Action.CANCEL, "Delete"],
-				emphasizedAction: MessageBox.Action.CANCEL,
+				actions: ["Delete", MessageBox.Action.CANCEL],
+				emphasizedAction: "Delete",
 				onClose: function (sAction) {
 					if (sAction === "Delete") {
 						jQuery.ajax({

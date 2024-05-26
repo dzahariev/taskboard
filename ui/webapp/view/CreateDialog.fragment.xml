@@ -1,0 +1,50 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core">
+	<Dialog
+		id="createDialog"
+		title="Create Task">
+		<content>
+			<VBox class="sapUiSmallMargin" id="formContainer">
+				<f:SimpleForm id="CreateTaskForm" editable="true" layout="ColumnLayout" columnsM="1" columnsL="1" columnsXL="1">
+					<f:content>
+						<Label text="Kind" />
+						<Select id="KIND_COMBOBOX">
+							<items>
+								<core:Item text="HandBrake" key="handbrake" />
+								<core:Item text="Backup" key="backup" />
+							</items>
+						</Select>
+						<Label text="From" />
+						<Input id="FROM_INPUT" />
+						<Label text="To" />
+						<Input id="TO_INPUT" />
+						<Label text="Preset" />
+						<Select id="PRESET_COMBOBOX" >
+							<items>
+								<core:Item text="NotApplicable" key="NotApplicable" />
+								<core:Item text="Custom720P" key="Custom720P" />
+								<core:Item text="Custom576P" key="Custom576P" />
+								<core:Item text="Custom480P" key="Custom480P" />
+								<core:Item text="Custom265X720P" key="Custom265X720P" />
+								<core:Item text="Custom265X576P" key="Custom265X576P" />
+								<core:Item text="Custom265X480P" key="Custom265X480P" />
+							</items>
+						</Select>
+					</f:content>
+				</f:SimpleForm>
+			</VBox>
+		</content>
+		<footer>
+			<Toolbar>
+				<content>
+					<ToolbarSpacer />
+					<Button type="Accept" text="Save" press=".onSave" />
+					<Button id="Reject" text="Reject" type="Reject" press=".closeDialog" ariaHasPopup="Dialog" />
+				</content>
+			</Toolbar>
+		</footer>
+	</Dialog>
+</core:FragmentDefinition>
