@@ -1,0 +1,95 @@
+<mvc:View
+	controllerName="com.zahariev.taskboard.controller.Home"
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc">
+	<Page showHeader="false">
+		<landmarkInfo>
+			<PageAccessibleLandmarkInfo
+				rootRole="Region"
+				rootLabel="{i18n>Home_rootLabel}"
+				contentRole="Main"
+				contentLabel="{i18n>Home_contentLabel}"/>
+		</landmarkInfo>
+		<content>
+			<Panel
+				id="homeContainer"
+				accessibleRole="Region"
+				class="sapUiNoContentPadding">
+				<headerToolbar>
+					<Toolbar>
+						<Title
+							text="{i18n>tasksTableHeader}"
+							level="H3"
+							textAlign="Left"/>
+						<ToolbarSpacer/>
+						<Button
+							id="new"
+							icon="sap-icon://add-document"
+							press=".createNew"
+							tooltip="{i18n>new}"/>
+						<Button
+							id="refresh"
+							icon="sap-icon://refresh"
+							press=".loadData"
+							tooltip="{i18n>refresh}"/>
+					</Toolbar>
+				</headerToolbar>
+				<content>
+					<l:BlockLayout
+						id="homeBlockLayout"
+						busy="false"
+						background="Dashboard">
+						<l:BlockLayoutRow 
+							rowColorSet="ColorSet2">
+							<l:BlockLayoutCell>
+								<Table
+									items="{path:'tasks>/tasks', templateShareable: false}"
+									fixedLayout="false">
+									<columns>
+										<Column>
+											<Text text="{i18n>taskFieldKind}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>taskFieldStatus}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>taskFieldID}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>taskFieldProgress}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>taskFieldProperties}"/>
+										</Column>
+										<Column>
+											<Text text=""/>
+										</Column>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<core:Icon src="{parts: ['tasks>kind'], formatter: '.kindIcon'}"/>
+												<core:Icon src="{parts: ['tasks>status'], formatter: '.statusIcon'}"/>
+												<Text text="{tasks>id}" renderWhitespace="true"/>
+												<ProgressIndicator
+													class="sapUiSmallMarginBottom"
+													percentValue="{tasks>progress}"
+													displayValue="{tasks>progress}%"
+													showValue="true"
+													state="None" />
+												<Text text="{parts: ['tasks>properties'], formatter: '.propertiesAsJSON'}" renderWhitespace="true"/>
+												<Button icon="sap-icon://delete" tooltip="{i18n>delete}" press=".delete"/>
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							</l:BlockLayoutCell>
+						</l:BlockLayoutRow>
+					</l:BlockLayout>
+				</content>
+			</Panel>
+		</content>
+	</Page>
+</mvc:View>

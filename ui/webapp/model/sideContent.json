@@ -1,0 +1,25 @@
+{
+	"selectedKey": "home",
+
+	"navigation": [
+		{
+			"titleI18nKey": "sideContentHome",
+			"icon": "sap-icon://home",
+			"expanded": true,
+			"key": "home",
+			"items": []
+		}
+	],
+	"fixedNavigation": [
+		{
+			"titleI18nKey": "sideContentRepo",
+			"icon": "sap-icon://chain-link",
+			"key": "https://github.com/dzahariev/taskboard"
+		},
+		{
+			"titleI18nKey": "sideContentLicense",
+			"icon": "sap-icon://compare",
+			"key": "https://github.com/dzahariev/taskboard/blob/main/LICENSE"
+		}
+	]
+}

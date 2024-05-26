@@ -19,3 +19,12 @@
 
 # Go workspace file
 go.work
+
+# Files in public and tasks folder - used as containers only
+public/*
+tasks/*
+
+# Node dependencies
+package-lock.json
+node_modules
+keycloak-js
