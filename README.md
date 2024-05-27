@@ -1,7 +1,7 @@
 # taskboard
 Web application for managing (create/modify/delete/start/stop) and monitoring (see progress) of generic tasks, that are handled by separate script or module. File system is used for persistency. 
 
-- Backend build with Go, using [GorillaMux](https://github.com/gorilla/mux) for router and [GORM](https://gorm.io) for ORM data access
+- Backend build with Go, using [GorillaMux](https://github.com/gorilla/mux) for router.
 - Frontend based on [OpenUI5](https://openui5.hana.ondemand.com)
 - Security is token based with [Keycloak](https://www.keycloak.org) Open ID provider
 
@@ -111,7 +111,7 @@ Create group `Realm Admins` with follwoing role mappings:
 - `realm-management.view-users`
 - `realm-management.manage-users`
 
-Create dedicated user `realmadmin` and addi to `Realm Admins` group.
+Create dedicated user `realmadmin` and add it to `Realm Admins` group.
 This user can manage (create/delete) users in this realm using the management console: http://keycloak:8086/admin/taskboard/console
 
 This user is responsible to add/remove users from this realm.
