@@ -32,7 +32,6 @@ services:
       - AUTH_REALM=${AUTH_REALM}
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET}
-      - API_PORT=8800
       - API_PATH=/api/
     volumes:
       - "./tasks:/tasks"
