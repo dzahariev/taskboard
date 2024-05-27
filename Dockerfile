@@ -37,11 +37,10 @@ ARG TARGETOS TARGETARCH
 RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -installsuffix cgo -o /main main.go
 
 # Release 
-FROM --platform=$BUILDPLATFORM alpine:3 AS release
+FROM --platform=$BUILDPLATFORM ubuntu:jammy AS release
 VOLUME ["/tasks"]
 WORKDIR /
 COPY --from=build-ui /usr/app/dist /public
 COPY ./ui/sap-ui-version.json /public/resources/sap-ui-version.json
 COPY --from=build /main /
 ENTRYPOINT [ "./main" ]
-EXPOSE 8800
