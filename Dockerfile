@@ -30,17 +30,18 @@ RUN npm install
 RUN npm run build
 
 # Backend Build 
-FROM --platform=$BUILDPLATFORM golang:1.22 AS build
+FROM --platform=$BUILDPLATFORM golang AS build
 WORKDIR /go/src/github.com/dzahariev/taskboard
 COPY . ./
 ARG TARGETOS TARGETARCH
 RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -installsuffix cgo -o /main main.go
 
 # Release 
-FROM --platform=$BUILDPLATFORM ubuntu:jammy AS release
+FROM alpine:3 AS release
 VOLUME ["/tasks"]
 WORKDIR /
 COPY --from=build-ui /usr/app/dist /public
 COPY ./ui/sap-ui-version.json /public/resources/sap-ui-version.json
 COPY --from=build /main /
 ENTRYPOINT [ "./main" ]
+EXPOSE 8800
