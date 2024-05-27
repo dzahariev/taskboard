@@ -3,13 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "author": "dzahariev",
-  "description": "taskboard",
+  "description": "TaskBoard",
   "scripts": {
     "start": "ui5 serve --accept-remote-connections --port 8801",
     "build": "ui5 build preload --clean-dest --include-all-dependencies"
   },
   "devDependencies": {
-    "@ui5/cli": "^3.10.0",
-    "keycloak-js": "^24.0.3"
+    "@ui5/cli": "^3.10.3",
+    "keycloak-js": "^24.0.4"
   }
 }
