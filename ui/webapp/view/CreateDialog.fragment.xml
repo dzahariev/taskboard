@@ -18,10 +18,8 @@
 							</items>
 						</Select>
 						<Label text="From" />
-						<Input id="FROM_INPUT" />
+						<Input id="SOURCE_INPUT" />
 						<Label text="To" />
-						<Input id="TO_INPUT" />
-						<Label text="Preset" />
 						<Select id="PRESET_COMBOBOX" >
 							<items>
 								<core:Item text="NotApplicable" key="NotApplicable" />

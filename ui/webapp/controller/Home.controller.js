@@ -57,10 +57,6 @@ sap.ui.define([
 			}
 		},
 
-		propertiesAsJSON: function(anyData) {
-			return JSON.stringify(anyData, null, 2)
-		},
-
 		statusIcon: function(anyData) {
 			if (anyData.toUpperCase() === "new".toUpperCase()) {
 				return "sap-icon://create"
@@ -84,6 +80,28 @@ sap.ui.define([
 			return "sap-icon://action-settings"
 		},
 
+		presetText: function(anyData) {
+			if (anyData.toUpperCase() === "Custom720P".toUpperCase()) {
+				return "720P"
+			} 
+			if (anyData.toUpperCase() === "Custom576P".toUpperCase()) {
+				return "576P"
+			} 
+			if (anyData.toUpperCase() === "Custom480P".toUpperCase()) {
+				return "480P"
+			} 
+			if (anyData.toUpperCase() === "Custom265X720P".toUpperCase()) {
+				return "*720P"
+			} 
+			if (anyData.toUpperCase() === "Custom265X576P".toUpperCase()) {
+				return "*576P"
+			} 
+			if (anyData.toUpperCase() === "Custom265X480P".toUpperCase()) {
+				return "*480P"
+			} 
+			return "N/A"
+		},
+
 		closeDialog: function () {
 			this.oDialog.close();
 		},
@@ -93,8 +111,7 @@ sap.ui.define([
 			const url = '/api/task'
 
 			const kindFieldValue = this.oView.byId("KIND_COMBOBOX").getSelectedItem().getKey();
-			const fromFieldValue = this.oView.byId("FROM_INPUT").getValue();
-			const toFieldValue = this.oView.byId("TO_INPUT").getValue();
+			const sourceFieldValue = this.oView.byId("SOURCE_INPUT").getValue();
 			const presetFieldValue = this.oView.byId("PRESET_COMBOBOX").getSelectedItem().getKey();
 			jQuery.ajax({
 				url: url,
@@ -104,11 +121,8 @@ sap.ui.define([
 						"status": "new",
 						"progress": "0",
 						"kind": kindFieldValue,
-						"properties": {
-							"from": fromFieldValue, 
-							"to": toFieldValue, 
-							"preset": presetFieldValue
-						}
+						"source" : sourceFieldValue, 
+						"preset": presetFieldValue
 					}),
 				beforeSend: function (xhr) {
 					xhr.setRequestHeader('Authorization', `Bearer ${token}`);
