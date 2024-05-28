@@ -19,11 +19,12 @@ const (
 
 // Task
 type Task struct {
-	ID         uuid.UUID         `json:"id"`
-	Status     string            `json:"status"`
-	Progress   string            `json:"progress"`
-	Kind       string            `json:"kind"`
-	Properties map[string]string `json:"properties"`
+	ID       uuid.UUID `json:"id"`
+	Status   string    `json:"status"`
+	Progress string    `json:"progress"`
+	Kind     string    `json:"kind"`
+	Source   string    `json:"source"`
+	Preset   string    `json:"preset"`
 }
 
 // Count returns count of all known objects of this type
@@ -56,7 +57,8 @@ func (t *Task) Load() error {
 		t.Status = currentTask.Status
 		t.Progress = currentTask.Progress
 		t.Kind = currentTask.Kind
-		t.Properties = currentTask.Properties
+		t.Source = currentTask.Source
+		t.Preset = currentTask.Preset
 		return nil
 	}
 }
