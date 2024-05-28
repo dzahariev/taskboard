@@ -12,7 +12,6 @@ import (
 type Server struct {
 	Router     *mux.Router
 	AuthClient *security.AuthClient
-	APIPath    string
 }
 
 // AuthInitialize is used to register routes
@@ -28,9 +27,8 @@ func (server *Server) RoutesInitialize() {
 }
 
 // Initialize is used to init a DB cnnection and register routes
-func (server *Server) Initialize(authURL, authRealm, authClientID, authClientSecret, apiPath string) {
+func (server *Server) Initialize(authURL, authRealm, authClientID, authClientSecret string) {
 	server.AuthInitialize(authURL, authRealm, authClientID, authClientSecret)
-	server.APIPath = apiPath
 	server.RoutesInitialize()
 }
 

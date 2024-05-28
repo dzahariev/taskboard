@@ -15,9 +15,6 @@ func main() {
 	authClientID := os.Getenv("AUTH_CLIENT_ID")
 	authClientSecret := os.Getenv("AUTH_CLIENT_SECRET")
 
-	// Server configuration
-	apiPath := os.Getenv("API_PATH")
-
-	server.Initialize(authURL, authRealm, authClientID, authClientSecret, apiPath)
+	server.Initialize(authURL, authRealm, authClientID, authClientSecret)
 	server.Run(":8800")
 }
