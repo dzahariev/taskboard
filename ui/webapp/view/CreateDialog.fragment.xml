@@ -11,25 +11,27 @@
 				<f:SimpleForm id="CreateTaskForm" editable="true" layout="ColumnLayout" columnsM="1" columnsL="1" columnsXL="1">
 					<f:content>
 						<Label text="Kind" />
-						<Select id="KIND_COMBOBOX">
-							<items>
-								<core:Item text="HandBrake" key="handbrake" />
-								<core:Item text="Backup" key="backup" />
-							</items>
+						<Select
+							id="KIND_COMBOBOX"
+							forceSelection="false"
+							items="{
+								path: '/kinds',
+								sorter: { path: 'name' }
+							}"
+							change="onKindChange">
+							<core:Item key="{name}" text="{name}" />
 						</Select>
-						<Label text="From" />
+						<Label text="Resource" />
 						<Input id="SOURCE_INPUT" />
-						<Label text="To" />
-						<Select id="PRESET_COMBOBOX" >
-							<items>
-								<core:Item text="NotApplicable" key="NotApplicable" />
-								<core:Item text="Custom720P" key="Custom720P" />
-								<core:Item text="Custom576P" key="Custom576P" />
-								<core:Item text="Custom480P" key="Custom480P" />
-								<core:Item text="Custom265X720P" key="Custom265X720P" />
-								<core:Item text="Custom265X576P" key="Custom265X576P" />
-								<core:Item text="Custom265X480P" key="Custom265X480P" />
-							</items>
+						<Label text="Preset" />
+						<Select
+							id="PRESET_COMBOBOX"
+							forceSelection="true"
+							items="{
+								path: 'selectedkind>/presets',
+								sorter: { path: 'key' }
+							}">
+							<core:Item key="{selectedkind>key}" text="{selectedkind>name}" />
 						</Select>
 					</f:content>
 				</f:SimpleForm>

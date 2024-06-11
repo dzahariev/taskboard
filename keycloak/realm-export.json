@@ -64,6 +64,15 @@
         "attributes": {}
       },
       {
+        "id": "a8ff8dbe-bc0c-4f98-90a9-989f39b5eda7",
+        "name": "configuration.read",
+        "description": "configuration.read",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "13b1275a-6de4-431d-bb76-9c45e558808d",
+        "attributes": {}
+      },
+      {
         "id": "a299d10f-5ebb-4888-9cb5-c3c04bf97f5d",
         "name": "task.write",
         "description": "task.write",
@@ -440,7 +449,8 @@
       "path": "/Admins",
       "realmRoles": [
         "task.read",
-        "task.write"
+        "task.write", 
+        "configuration.read"
       ]
     },
     {
@@ -448,7 +458,8 @@
       "name": "Users",
       "path": "/Users",
       "realmRoles": [
-        "task.read"
+        "task.read",
+        "configuration.read"
       ]
     }
   ],
@@ -592,7 +603,8 @@
       "clientScope": "roles",
       "roles": [
         "task.write",
-        "task.read"
+        "task.read",
+        "configuration.read"
       ]
     }
   ],

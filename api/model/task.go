@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 
 	"github.com/gofrs/uuid/v5"
 )
@@ -124,7 +125,7 @@ func (t *Task) FindAll() (*[]Task, error) {
 	for _, file := range files {
 		if file.Type().IsRegular() {
 			fileExtension := path.Ext(file.Name())
-			if fileExtension == ".json" {
+			if fileExtension == ".json" && file.Name() != "configuration.json" {
 				var currentTask Task
 				fileContent, err := os.ReadFile(fmt.Sprintf("%s/%s", TASKS_PATH, file.Name()))
 				if err != nil {
@@ -138,6 +139,13 @@ func (t *Task) FindAll() (*[]Task, error) {
 			}
 		}
 	}
+	sort.Slice(tasks, func(i, j int) bool {
+		if tasks[j].Kind == tasks[i].Kind {
+			return tasks[j].Source > tasks[i].Source
+		} else {
+			return tasks[j].Kind > tasks[i].Kind
+		}
+	})
 	return &tasks, nil
 }
 

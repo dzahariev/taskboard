@@ -33,16 +33,17 @@ sap.ui.define([
 				this.getModel("view").setProperty("/isPhone", oDevice.name === "Phone");
 			}.bind(this));
 
-			// Define task model
-			this.taskModel = new JSONModel({
+			// Define configuration model
+			this.oModel = new JSONModel({
+				kinds: [],
 				tasks: [],
 			})
-			this.taskModel.setSizeLimit(Number.MAX_VALUE);
-			this.setModel(this.taskModel, "tasks");
-			this.loadData()
+			this.oModel.setSizeLimit(Number.MAX_VALUE);
+			this.setModel(this.oModel);
+			this.loadConfiguration()
 
 			this.oView = this.getView();
-			this.oView.setModel(this.taskModel, "tasks");
+			this.oView.setModel(this.oModel);
 		},
 
 		onExit: function() {
@@ -71,35 +72,33 @@ sap.ui.define([
 		},
 
 		kindIcon: function(anyData) {
-			if (anyData.toUpperCase() === "backup".toUpperCase()) {
-				return "sap-icon://synchronize"
-			} 
 			if (anyData.toUpperCase() === "handbrake".toUpperCase()) {
 				return "sap-icon://video"
+			} 
+			if (anyData.toUpperCase() === "download".toUpperCase()) {
+				return "sap-icon://download"
+			} 
+			if (anyData.toUpperCase() === "backup".toUpperCase()) {
+				return "sap-icon://synchronize"
 			} 
 			return "sap-icon://action-settings"
 		},
 
-		presetText: function(anyData) {
-			if (anyData.toUpperCase() === "Custom720P".toUpperCase()) {
-				return "720P"
-			} 
-			if (anyData.toUpperCase() === "Custom576P".toUpperCase()) {
-				return "576P"
-			} 
-			if (anyData.toUpperCase() === "Custom480P".toUpperCase()) {
-				return "480P"
-			} 
-			if (anyData.toUpperCase() === "Custom265X720P".toUpperCase()) {
-				return "*720P"
-			} 
-			if (anyData.toUpperCase() === "Custom265X576P".toUpperCase()) {
-				return "*576P"
-			} 
-			if (anyData.toUpperCase() === "Custom265X480P".toUpperCase()) {
-				return "*480P"
-			} 
-			return "N/A"
+		presetText: function(kind, presetKey) {
+			const oModel = this.getModel()
+			const kinds = oModel.getProperty("/kinds");
+			var result = "N/A"
+
+			kinds.forEach((currentKind) => {
+				if (kind.toUpperCase() === currentKind.name.toUpperCase()) {
+					currentKind.presets.forEach((currentPreset) => {
+						if (presetKey.toUpperCase() === currentPreset.key.toUpperCase()) {
+							result = currentPreset.name
+						}					
+					})	
+				} 
+			});
+			return result
 		},
 
 		closeDialog: function () {
@@ -139,14 +138,24 @@ sap.ui.define([
 					name: "com.zahariev.taskboard.view.CreateDialog"
 				});
 			}
+
 			this.oCreateDialog.then(function (oDialog) {
 				this.oDialog = oDialog;
 				this.oDialog.open();
 			}.bind(this));
 		},
 
+		onKindChange: function (oEvent) {
+			var bindingContext = oEvent.mParameters.selectedItem.getBindingContext();
+			var oModel = oEvent.getSource().getModel();
+			var kindData = oModel.getProperty(bindingContext.sPath);
+			var selectedKindModel = new JSONModel();
+			selectedKindModel.setData(kindData);
+			this.oView.byId("PRESET_COMBOBOX").setModel(selectedKindModel, "selectedkind");
+		}, 
+
 		delete: async function (oEvent) {
-			const task = oEvent.getSource().getBindingContext("tasks").getObject();
+			const task = oEvent.getSource().getBindingContext().getObject();
 			const token = await this.getOwnerComponent().getToken();
 			const url = '/api/task/'+ task.id
 			MessageBox.confirm("Delete " + task.id + "?", {
@@ -169,8 +178,28 @@ sap.ui.define([
 			});		
 		},
 
+		loadConfiguration: async function () {
+			const oModel = this.getModel()
+			const token = await this.getOwnerComponent().getToken()
+			var strResponse = "";
+			jQuery.ajax({
+				url: '/api/configuration',
+				type: "GET",
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+				},
+				success: function(response) {
+					strResponse = response;
+				},
+				async:false
+			});
+	
+			oModel.setProperty("/kinds", strResponse.kinds);
+			this.getView().getModel().refresh(true);
+		},
+
 		loadData: async function () {
-			const taskModel = this.getModel("tasks")
+			const oModel = this.getModel()
 			const token = await this.getOwnerComponent().getToken()
 			var strResponse = "";
 			jQuery.ajax({
@@ -185,8 +214,8 @@ sap.ui.define([
 				async:false
 			});
 	
-			taskModel.setProperty("/tasks", strResponse.data);
-			this.getView().getModel("tasks").refresh(true);
+			oModel.setProperty("/tasks", strResponse.data);
+			this.getView().getModel().refresh(true);
 		}
 	});
 });
