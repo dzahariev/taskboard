@@ -45,7 +45,7 @@
 							rowColorSet="ColorSet2">
 							<l:BlockLayoutCell>
 								<Table
-									items="{path:'tasks>/tasks', templateShareable: false}"
+									items="{path:'/tasks', templateShareable: false}"
 									fixedLayout="false">
 									<columns>
 										<Column width="1%">
@@ -70,14 +70,14 @@
 									<items>
 										<ColumnListItem>
 											<cells>
-												<core:Icon src="{parts: ['tasks>kind'], formatter: '.kindIcon'}"/>
-												<core:Icon src="{parts: ['tasks>status'], formatter: '.statusIcon'}"/>
-												<Text text="{tasks>source}" renderWhitespace="true"/>
-												<Text text="{parts: ['tasks>preset'], formatter: '.presetText'}" renderWhitespace="true"/>
+												<core:Icon src="{parts: ['kind'], formatter: '.kindIcon'}"/>
+												<core:Icon src="{parts: ['status'], formatter: '.statusIcon'}"/>
+												<Text text="{source}" renderWhitespace="true"/>
+												<Text text="{parts: ['kind', 'preset'], formatter: '.presetText'}" renderWhitespace="true"/>
 												<ProgressIndicator
 													class="sapUiSmallMarginBottom"
-													percentValue="{tasks>progress}"
-													displayValue="{tasks>progress}%"
+													percentValue="{progress}"
+													displayValue="{progress}%"
 													showValue="true"
 													state="None" />
 												<Button icon="sap-icon://delete" tooltip="{i18n>delete}" press=".delete"/>
