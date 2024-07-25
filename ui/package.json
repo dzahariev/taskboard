@@ -9,7 +9,7 @@
     "build": "ui5 build preload --clean-dest --include-all-dependencies"
   },
   "devDependencies": {
-    "@ui5/cli": "^3.10.3",
+    "@ui5/cli": "^4.0.0",
     "keycloak-js": "^25.0.0"
   }
 }
