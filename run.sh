@@ -77,8 +77,8 @@ if [[ ${REUSE_KEYCLOAK} = true ]]; then
 else
     echo "Create Keycloak container ${KEYCLOAK_CONTAINER} on ${KEYCLOAK_PORT} ..."
     docker run -d --name ${KEYCLOAK_CONTAINER} \
-                -e KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN} \
-                -e KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD} \
+                -e KC_BOOTSTRAP_ADMIN_USERNAME=${KEYCLOAK_ADMIN} \
+                -e KC_BOOTSTRAP_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD} \
                 -p ${KEYCLOAK_PORT}:${KEYCLOAK_PORT} \
                 -v ./keycloak:/opt/keycloak/data/import \
                 keycloak/keycloak:${KEYCLOAK_VERSION} \
