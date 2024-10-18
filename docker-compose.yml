@@ -3,7 +3,7 @@ networks:
 
 services:
   keycloak:
-    image: keycloak/keycloak:26.0.0
+    image: keycloak/keycloak:26.0.1
     restart: always
     hostname: keycloak
     ports:
