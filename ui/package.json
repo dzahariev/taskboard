@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "@ui5/cli": "^4.0.0",
-    "keycloak-js": "^26.0.0"
+    "keycloak-js": "^25.0.0"
   }
 }
