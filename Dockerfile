@@ -1,5 +1,5 @@
 # UI Build 
-FROM --platform=$BUILDPLATFORM node:20-alpine as build-ui
+FROM --platform=$BUILDPLATFORM node:22-alpine as build-ui
 
 # Install some tools needed for preparation and build
 RUN apk update && \
