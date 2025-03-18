@@ -5,8 +5,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
 	"sap/ui/Device",
-	"sap/ui/model/resource/ResourceModel",
-	'./libs/keycloak-js/dist/keycloak'
+	"sap/ui/model/resource/ResourceModel"
 ], function(library, UIComponent, models, JSONModel, History, Device) {
 	"use strict";
 
@@ -25,8 +24,13 @@ sap.ui.define([
 				keycloak: null,
 				username: "Unknown",
 			})
+			var Keycloak;
+			if (window.Keycloak) {
+				Keycloak = window.Keycloak;
+			}
+
 			this.authModel.setSizeLimit(Number.MAX_VALUE);
-			const keycloak = new Keycloak('/libs/keycloak-cfg/keycloak.json');
+			const keycloak = new Keycloak('/keycloak-cfg/keycloak.json');
 			const authenticated = await keycloak.init({ onLoad: 'login-required', checkLoginIframe: false })
 			if(authenticated){
 				this.authModel.setProperty("/keycloak", keycloak);

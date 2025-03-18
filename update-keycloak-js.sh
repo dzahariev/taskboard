@@ -2,9 +2,9 @@
 
 ROOT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-LIB_PATH="${ROOT_PATH}/ui/webapp/libs"
+LIB_PATH="${ROOT_PATH}/ui"
 
-LAST_TAG_DATA=$(curl -s -L https://api.github.com/repos/keycloak/keycloak/releases/175954537)
+LAST_TAG_DATA=$(curl -s -L https://api.github.com/repos/keycloak/keycloak/releases/latest)
 KEYCLOAK_JS_DATA="$(jq -r -e '.assets[] | select( .browser_download_url | contains("keycloak-js"))' <<< "${LAST_TAG_DATA}")"
 KEYCLOAK_JS_DOWNLOAD_URL="$(jq -r -e '.browser_download_url' <<< "${KEYCLOAK_JS_DATA}")"
 
