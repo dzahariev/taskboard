@@ -6,8 +6,7 @@ sap.ui.define([
 	'sap/ui/Device',
 	'sap/ui/core/syncStyleClass',
 	'sap/m/library',
-	"sap/ui/model/json/JSONModel",
-	'../libs/keycloak-js/dist/keycloak'
+	"sap/ui/model/json/JSONModel"
 ], function (
 	BaseController,
 	ActionSheet,
@@ -16,8 +15,7 @@ sap.ui.define([
 	Device,
 	syncStyleClass,
 	mobileLibrary,
-	JSONModel,
-	keycloakLibrary
+	JSONModel
 ) {
 	"use strict";
 

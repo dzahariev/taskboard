@@ -20,10 +20,10 @@ COPY ./ui/package.json ./package.json
 COPY ./ui/ui5.yaml ./ui5.yaml
 
 # Install keycloak-js
-RUN rm -fR ./webapp/libs/keycloak-js
-RUN curl -s -L -o keycloak-js.tgz $(curl -s -L https://api.github.com/repos/keycloak/keycloak/releases/175954537 | jq -r -e '.assets[] | select( .browser_download_url | contains("keycloak-js"))' | jq -r -e '.browser_download_url') 
-RUN tar xvzf keycloak-js.tgz -C ./webapp/libs/. 
-RUN mv ./webapp/libs/package ./webapp/libs/keycloak-js
+RUN rm -fR ./keycloak-js
+RUN curl -s -L -o keycloak-js.tgz $(curl -s -L https://api.github.com/repos/keycloak/keycloak/releases/latest | jq -r -e '.assets[] | select( .browser_download_url | contains("keycloak-js"))' | jq -r -e '.browser_download_url') 
+RUN tar xvzf keycloak-js.tgz -C .
+RUN mv  ./package ./keycloak-js
 
 # Get dependencies and builf
 RUN npm install
@@ -41,6 +41,7 @@ FROM alpine:3 AS release
 VOLUME ["/tasks"]
 WORKDIR /
 COPY --from=build-ui /usr/app/dist /public
+COPY --from=build-ui /usr/app/keycloak-js /public/resources/libs/keycloak-js/.
 COPY ./ui/sap-ui-version.json /public/resources/sap-ui-version.json
 COPY --from=build /main /
 ENTRYPOINT [ "./main" ]

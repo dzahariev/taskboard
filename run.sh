@@ -49,7 +49,7 @@ set +a
 
 KEYCLOAK_CONTAINER="taskboard-keycloak"
 KEYCLOAK_PORT="8086"
-KEYCLOAK_VERSION="25.0.6"
+KEYCLOAK_VERSION="26.1.4"
 
 function clean() {
 
@@ -88,11 +88,11 @@ fi
 if [[ ${WITH_UI} = true ]]; then
     if [[ ${REBUILD_UI} = true ]]; then
         echo "Rebuilding UI ..."
-        if [ ! -d "${ROOT_PATH}/ui/webapp/libs/keycloak-js" ]; then
-            echo "${ROOT_PATH}/ui/webapp/libs/keycloak-js is missing. Fetching it ..."
+        if [ ! -d "${ROOT_PATH}/ui/keycloak-js" ]; then
+            echo "${ROOT_PATH}/ui/keycloak-js is missing. Fetching it ..."
             sh update-keycloak-js.sh
         else
-            echo "${ROOT_PATH}/ui/webapp/libs/keycloak-js is available, using the local copy."
+            echo "${ROOT_PATH}/ui/keycloak-js is available, using the local copy."
         fi 
         rm -fR ${ROOT_PATH}/public/*
         cd ${ROOT_PATH}/ui
@@ -102,6 +102,8 @@ if [[ ${WITH_UI} = true ]]; then
         npm run build
         mv ${ROOT_PATH}/ui/dist/* ${ROOT_PATH}/public/.
         cp ${ROOT_PATH}/ui/sap-ui-version.json ${ROOT_PATH}/public/resources/.
+        mkdir -p ${ROOT_PATH}/public/resources/libs
+        cp -r ${ROOT_PATH}/ui/keycloak-js ${ROOT_PATH}/public/resources/libs/.
         cd ${ROOT_PATH}
         echo "UI was rebuilded!"
     else
