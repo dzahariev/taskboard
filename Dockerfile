@@ -21,7 +21,7 @@ COPY ./ui/ui5.yaml ./ui5.yaml
 
 # Install keycloak-js
 RUN rm -fR ./keycloak-js
-RUN curl -s -L -o keycloak-js.tgz $(curl -s -L https://api.github.com/repos/keycloak/keycloak/releases/latest | jq -r -e '.assets[] | select( .browser_download_url | contains("keycloak-js"))' | jq -r -e '.browser_download_url') 
+RUN curl -s -L -o keycloak-js.tgz $(curl -s -L https://api.github.com/repos/keycloak/keycloak/releases/211761616 | jq -r -e '.assets[] | select( .browser_download_url | contains("keycloak-js"))' | jq -r -e '.browser_download_url') 
 RUN tar xvzf keycloak-js.tgz -C .
 RUN mv  ./package ./keycloak-js
 
