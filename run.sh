@@ -49,7 +49,7 @@ set +a
 
 KEYCLOAK_CONTAINER="taskboard-keycloak"
 KEYCLOAK_PORT="8086"
-KEYCLOAK_VERSION="26.2.1"
+KEYCLOAK_VERSION="26.2.3"
 
 function clean() {
 

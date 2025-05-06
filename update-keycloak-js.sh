@@ -4,11 +4,10 @@ ROOT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 LIB_PATH="${ROOT_PATH}/ui"
 
-LAST_TAG_DATA=$(curl -s -L https://api.github.com/repos/keycloak/keycloak/releases/211761616)
-KEYCLOAK_JS_DATA="$(jq -r -e '.assets[] | select( .browser_download_url | contains("keycloak-js"))' <<< "${LAST_TAG_DATA}")"
-KEYCLOAK_JS_DOWNLOAD_URL="$(jq -r -e '.browser_download_url' <<< "${KEYCLOAK_JS_DATA}")"
+LATEST_VERSION_DATA=$(curl -s -L https://registry.npmjs.org/keycloak-js/latest)
+TAG_NAME="$(jq -r -e '.version' <<< "${LATEST_VERSION_DATA}")"
 
-TAG_NAME="$(jq -r -e '.tag_name' <<< "${LAST_TAG_DATA}")"
+KEYCLOAK_JS_DOWNLOAD_URL="$(jq -r -e '.dist.tarball' <<< "${LATEST_VERSION_DATA}")"
 
 mv ${LIB_PATH}/keycloak-js ${LIB_PATH}/keycloak-js.old
 curl -s -L $KEYCLOAK_JS_DOWNLOAD_URL | tar xz - -C ${LIB_PATH}/. 
