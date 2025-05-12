@@ -11,6 +11,7 @@
   ],
   "automergeType": "pr",
   "prCreation": "immediate",
+  "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "prHourlyLimit": 0,
   "ignoreTests": true
 }
