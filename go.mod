@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/Nerzal/gocloak/v13 v13.9.0
-	github.com/gofrs/uuid/v5 v5.3.2
+	github.com/gofrs/uuid/v5 v5.4.0
 	github.com/gorilla/mux v1.8.1
 )
 
