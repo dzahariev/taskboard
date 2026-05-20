@@ -891,6 +891,7 @@
         "acr",
         "profile",
         "roles",
+        "api-audience",
         "email"
       ],
       "optionalClientScopes": [
@@ -1378,6 +1379,36 @@
         "consent.screen.text": "${offlineAccessScopeConsentText}",
         "display.on.consent.screen": "true"
       }
+    },
+    {
+      "id": "9b1dfc06-6a03-48d5-b755-b512247972ce",
+      "name": "api-audience",
+      "description": "",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "false",
+        "display.on.consent.screen": "true",
+        "gui.order": "",
+        "consent.screen.text": "",
+        "include.in.openid.provider.metadata": "true"
+      },
+      "protocolMappers": [
+        {
+          "id": "ee191f29-1e17-439a-8db9-be9aef536d37",
+          "name": "taskboard-backend-client-aud",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "taskboard-backend-client",
+            "id.token.claim": "false",
+            "lightweight.claim": "true",
+            "introspection.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "false"
+          }
+        }
+      ]
     },
     {
       "id": "50877806-03d7-4a75-8875-c8d3e0e3868a",
