@@ -944,6 +944,7 @@
         "acr",
         "profile",
         "roles",
+        "api-audience",
         "email"
       ],
       "optionalClientScopes": [
@@ -1406,6 +1407,20 @@
             "introspection.token.claim": "true",
             "access.token.claim": "true",
             "userinfo.token.claim": "false"
+          }
+        },
+        {
+          "id": "c04adec8-19d1-4448-a23c-eed1e978aa20",
+          "name": "taskboard-frontend-client-aud",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "taskboard-frontend-client",
+            "id.token.claim": "false",
+            "lightweight.claim": "true",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
           }
         }
       ]
