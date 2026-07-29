@@ -3,7 +3,7 @@ module github.com/dzahariev/taskboard
 go 1.25.0
 
 require (
-	github.com/Nerzal/gocloak/v14 v14.0.3
+	github.com/Nerzal/gocloak/v14 v14.0.4
 	github.com/gofrs/uuid/v5 v5.4.0
 	github.com/gorilla/mux v1.8.1
 )
@@ -15,5 +15,5 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/segmentio/ksuid v1.0.4 // indirect
 	golang.org/x/mod v0.35.0 // indirect
-	golang.org/x/net v0.53.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 )
