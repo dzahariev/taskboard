@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/Nerzal/gocloak/v14"
-	"github.com/Nerzal/gocloak/v14/pkg/jwx"
+	"github.com/Nerzal/gocloak/v15"
+	"github.com/Nerzal/gocloak/v15/pkg/jwx"
 )
 
 type AuthClient struct {
