@@ -39,7 +39,6 @@ VOLUME ["/tasks"]
 WORKDIR /
 COPY --from=build-ui /usr/app/dist /public
 COPY --from=build-ui /usr/app/keycloak-js /public/resources/libs/keycloak-js/.
-COPY ./ui/sap-ui-version.json /public/resources/sap-ui-version.json
 COPY --from=build /main /
 ENTRYPOINT [ "./main" ]
 EXPOSE 8800

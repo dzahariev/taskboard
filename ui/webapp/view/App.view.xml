@@ -37,8 +37,10 @@
 		</tnt:header>
 		<tnt:sideContent>
 			<tnt:SideNavigation
+				id="sideNavigation"
 				expanded="true"
-				selectedKey="{side>/selectedKey}">
+				selectedKey="{side>/selectedKey}"
+				itemSelect=".onSideNavItemSelect">
 				<tnt:NavigationList
 					items="{
 						path: 'side>/navigation',

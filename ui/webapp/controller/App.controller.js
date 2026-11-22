@@ -24,16 +24,11 @@ sap.ui.define([
 
 	return BaseController.extend("com.zahariev.taskboard.controller.App", {
 
-
-		_bExpanded: true,
-
 		onInit: function () {
 			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 
-			// if the app starts on desktop devices with small or medium screen size, collaps the side navigation
-			if (Device.resize.width <= 1024) {
-				this.onSideNavButtonPress();
-			}
+			// side navigation is expanded on large screens and collapsed on phones and tablets
+			this._setSideExpanded(this._isLargeScreen());
 
 			Device.media.attachHandler(this._handleWindowResize, this);
 			this.getRouter().attachRouteMatched(this.onRouteChange.bind(this));
@@ -62,10 +57,16 @@ sap.ui.define([
 
 		onRouteChange: function (oEvent) {
 			const selectedPageKey = oEvent.getParameter('name')
-			this.getModel('side').setProperty('/selectedKey', selectedPageKey);
+			const sideModel = this.getModel('side');
+			sideModel.dataLoaded().then(function () {
+				sideModel.setProperty('/selectedKey', selectedPageKey);
+				// SideNavigation only resolves the key against items that already exist, so apply it once they are created
+				this.byId("sideNavigation").setSelectedKey(selectedPageKey);
+			}.bind(this));
 
-			if (Device.system.phone) {
-				this.onSideNavButtonPress();
+			// on small screens the menu covers the content, so close it once a page is selected
+			if (!this._isLargeScreen()) {
+				this._setSideExpanded(false);
 			}
 			sap.ui.getCore().getEventBus().publish("taskboard", "RouteChanged", { selectedPageKey });
 		},
@@ -117,15 +118,29 @@ sap.ui.define([
 		},
 
 		onSideNavButtonPress: function () {
-			var oToolPage = this.byId("app");
-			var bSideExpanded = oToolPage.getSideExpanded();
-			this._setToggleButtonTooltip(bSideExpanded);
-			oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+			this._setSideExpanded(!this.byId("app").getSideExpanded());
+		},
+
+		// also covers selecting the current page, which does not trigger a route change
+		onSideNavItemSelect: function () {
+			if (!this._isLargeScreen()) {
+				this._setSideExpanded(false);
+			}
+		},
+
+		_setSideExpanded: function (bExpanded) {
+			this.byId("app").setSideExpanded(bExpanded);
+			this._setToggleButtonTooltip(bExpanded);
+		},
+
+		// ToolPage always renders the menu collapsed on phones and tablets, so only desktops count as large screens
+		_isLargeScreen: function () {
+			return Device.system.desktop && Device.media.getCurrentRange(Device.media.RANGESETS.SAP_STANDARD).name === "Desktop";
 		},
 
 		_setToggleButtonTooltip: function (bSideExpanded) {
 			var oToggleButton = this.byId('sideNavigationToggleButton');
-			this.getBundleText(bSideExpanded ? "expandMenuButtonText" : "collpaseMenuButtonText").then(function (sTooltipText) {
+			this.getBundleText(bSideExpanded ? "collpaseMenuButtonText" : "expandMenuButtonText").then(function (sTooltipText) {
 				oToggleButton.setTooltip(sTooltipText);
 			});
 		},
@@ -138,11 +153,9 @@ sap.ui.define([
 			return this.getBundleTextByModel(sI18nKey, i18nModel, aPlaceholderValues);
 		},
 
-		_handleWindowResize: function (oDevice) {
-			if ((oDevice.name === "Tablet" && this._bExpanded) || oDevice.name === "Desktop") {
-				this.onSideNavButtonPress();
-				this._bExpanded = (oDevice.name === "Desktop");
-			}
+		_handleWindowResize: function () {
+			// only called when the screen crosses a Phone/Tablet/Desktop breakpoint
+			this._setSideExpanded(this._isLargeScreen());
 		}
 
 	});

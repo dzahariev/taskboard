@@ -106,28 +106,21 @@ sap.ui.define([
 		},
 
 		onSave: async function () {
-			const token = await this.getOwnerComponent().getToken();
-			const url = '/api/task'
-
-			const kindFieldValue = this.oView.byId("KIND_COMBOBOX").getSelectedItem().getKey();
-			const sourceFieldValue = this.oView.byId("SOURCE_INPUT").getValue();
-			const presetFieldValue = this.oView.byId("PRESET_COMBOBOX").getSelectedItem().getKey();
-			jQuery.ajax({
-				url: url,
-				type: "POST",
-				contentType: 'application/json',
-				data: JSON.stringify({
-						"status": "new",
-						"progress": "0",
-						"kind": kindFieldValue,
-						"source" : sourceFieldValue, 
-						"preset": presetFieldValue
-					}),
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-				},
-				async:false
-			});
+			const kindFieldValue = this.byId("KIND_COMBOBOX").getSelectedKey();
+			const sourceFieldValue = this.byId("SOURCE_INPUT").getValue();
+			const presetFieldValue = this.byId("PRESET_COMBOBOX").getSelectedKey();
+			try {
+				await this.getOwnerComponent().apiRequest("POST", "/api/task", {
+					"status": "new",
+					"progress": "0",
+					"kind": kindFieldValue,
+					"source" : sourceFieldValue, 
+					"preset": presetFieldValue
+				});
+			} catch (error) {
+				MessageBox.error(error.message);
+				return;
+			}
 			this.closeDialog();
 			this.loadData();	
 		},
@@ -146,33 +139,27 @@ sap.ui.define([
 		},
 
 		onKindChange: function (oEvent) {
-			var bindingContext = oEvent.mParameters.selectedItem.getBindingContext();
-			var oModel = oEvent.getSource().getModel();
-			var kindData = oModel.getProperty(bindingContext.sPath);
-			var selectedKindModel = new JSONModel();
-			selectedKindModel.setData(kindData);
-			this.oView.byId("PRESET_COMBOBOX").setModel(selectedKindModel, "selectedkind");
+			// Presets are bound relative to the selected kind
+			const kindContext = oEvent.getParameter("selectedItem").getBindingContext();
+			this.byId("PRESET_COMBOBOX").bindElement(kindContext.getPath());
 		}, 
 
-		delete: async function (oEvent) {
+		delete: function (oEvent) {
 			const task = oEvent.getSource().getBindingContext().getObject();
-			const token = await this.getOwnerComponent().getToken();
-			const url = '/api/task/'+ task.id
 			MessageBox.confirm("Delete " + task.id + "?", {
 				actions: ["Delete", MessageBox.Action.CANCEL],
 				emphasizedAction: "Delete",
-				onClose: function (sAction) {
-					if (sAction === "Delete") {
-						jQuery.ajax({
-							url: url,
-							type: "DELETE",
-							beforeSend: function (xhr) {
-								xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-							},
-							async:false
-						});
-						this.loadData();
+				onClose: async function (sAction) {
+					if (sAction !== "Delete") {
+						return;
 					}
+					try {
+						await this.getOwnerComponent().apiRequest("DELETE", "/api/task/" + task.id);
+					} catch (error) {
+						MessageBox.error(error.message);
+						return;
+					}
+					this.loadData();
 				}.bind(this),
 				dependentOn: this.getView()
 			});		
@@ -180,42 +167,27 @@ sap.ui.define([
 
 		loadConfiguration: async function () {
 			const oModel = this.getModel()
-			const token = await this.getOwnerComponent().getToken()
-			var strResponse = "";
-			jQuery.ajax({
-				url: '/api/configuration',
-				type: "GET",
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-				},
-				success: function(response) {
-					strResponse = response;
-				},
-				async:false
-			});
-	
-			oModel.setProperty("/kinds", strResponse.kinds);
-			this.getView().getModel().refresh(true);
+			try {
+				const response = await this.getOwnerComponent().apiRequest("GET", "/api/configuration");
+				oModel.setProperty("/kinds", response.kinds);
+			} catch (error) {
+				MessageBox.error(error.message);
+				return;
+			}
+			// Re-evaluate formatters (e.g. presetText) that depend on the loaded kinds
+			oModel.refresh(true);
 		},
 
 		loadData: async function () {
 			const oModel = this.getModel()
-			const token = await this.getOwnerComponent().getToken()
-			var strResponse = "";
-			jQuery.ajax({
-				url: '/api/task',
-				type: "GET",
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-				},
-				success: function(response) {
-					strResponse = response;
-				},
-				async:false
-			});
-	
-			oModel.setProperty("/tasks", strResponse.data);
-			this.getView().getModel().refresh(true);
+			try {
+				const response = await this.getOwnerComponent().apiRequest("GET", "/api/task");
+				oModel.setProperty("/tasks", response.data);
+			} catch (error) {
+				MessageBox.error(error.message);
+				return;
+			}
+			oModel.refresh(true);
 		}
 	});
 });

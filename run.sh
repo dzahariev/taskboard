@@ -101,7 +101,6 @@ if [[ ${WITH_UI} = true ]]; then
         npm install
         npm run build
         mv ${ROOT_PATH}/ui/dist/* ${ROOT_PATH}/public/.
-        cp ${ROOT_PATH}/ui/sap-ui-version.json ${ROOT_PATH}/public/resources/.
         mkdir -p ${ROOT_PATH}/public/resources/libs
         cp -r ${ROOT_PATH}/ui/keycloak-js ${ROOT_PATH}/public/resources/libs/.
         cd ${ROOT_PATH}

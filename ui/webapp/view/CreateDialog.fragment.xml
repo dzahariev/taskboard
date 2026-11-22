@@ -5,7 +5,9 @@
 	xmlns:core="sap.ui.core">
 	<Dialog
 		id="createDialog"
-		title="Create Task">
+		title="Create Task"
+		contentWidth="32rem"
+		stretch="{device>/system/phone}">
 		<content>
 			<VBox class="sapUiSmallMargin" id="formContainer">
 				<f:SimpleForm id="CreateTaskForm" editable="true" layout="ColumnLayout" columnsM="1" columnsL="1" columnsXL="1">
@@ -13,6 +15,7 @@
 						<Label text="Kind" />
 						<Select
 							id="KIND_COMBOBOX"
+							width="100%"
 							forceSelection="false"
 							items="{
 								path: '/kinds',
@@ -26,12 +29,14 @@
 						<Label text="Preset" />
 						<Select
 							id="PRESET_COMBOBOX"
+							width="100%"
 							forceSelection="true"
 							items="{
-								path: 'selectedkind>/presets',
-								sorter: { path: 'key' }
+								path: 'presets',
+								sorter: { path: 'key' },
+								templateShareable: false
 							}">
-							<core:Item key="{selectedkind>key}" text="{selectedkind>name}" />
+							<core:Item key="{key}" text="{name}" />
 						</Select>
 					</f:content>
 				</f:SimpleForm>
