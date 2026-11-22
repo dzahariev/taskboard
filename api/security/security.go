@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/Nerzal/gocloak/v14"
-	"github.com/Nerzal/gocloak/v14/pkg/jwx"
+	"github.com/Nerzal/gocloak/v15"
+	"github.com/Nerzal/gocloak/v15/pkg/jwx"
 )
 
 type AuthClient struct {
@@ -30,7 +30,7 @@ func (authClient *AuthClient) RetrospectToken(ctx context.Context, accessToken s
 	if err != nil {
 		return err
 	}
-	if !*rptResult.Active {
+	if !rptResult.Active {
 		return errors.New("token is not active")
 	}
 

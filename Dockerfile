@@ -11,9 +11,6 @@ RUN apk update && \
 # Set work directory used as base for build
 WORKDIR /usr/app
 
-# Install OPEN UI 5 CLI tool
-RUN npm install --global @ui5/cli
-
 # Copy content
 COPY ./ui/webapp ./webapp
 COPY ./ui/package.json ./package.json

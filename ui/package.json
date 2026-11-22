@@ -9,6 +9,15 @@
     "build": "ui5 build preload --clean-dest --include-all-dependencies"
   },
   "devDependencies": {
-    "@ui5/cli": "^4.0.0"
+    "@ui5/cli": "^5.0.0-alpha.16"
+  },
+  "overrides": {
+    "devcert-sanscache": {
+      "glob": "^14.0.6",
+      "rimraf": "^6.1.4"
+    }
+  },
+  "allowScripts": {
+    "@parcel/watcher": false
   }
 }

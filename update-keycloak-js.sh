@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 ROOT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
@@ -9,9 +10,12 @@ TAG_NAME="$(jq -r -e '.version' <<< "${LATEST_VERSION_DATA}")"
 
 KEYCLOAK_JS_DOWNLOAD_URL="$(jq -r -e '.dist.tarball' <<< "${LATEST_VERSION_DATA}")"
 
-mv ${LIB_PATH}/keycloak-js ${LIB_PATH}/keycloak-js.old
-curl -s -L $KEYCLOAK_JS_DOWNLOAD_URL | tar xz - -C ${LIB_PATH}/. 
-mv ${LIB_PATH}/package ${LIB_PATH}/keycloak-js
-rm -fR  ${LIB_PATH}/keycloak-js.old
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "${TMP_DIR}"' EXIT
+
+curl -fsSL "${KEYCLOAK_JS_DOWNLOAD_URL}" | tar -xzf - -C "${TMP_DIR}"
+
+rm -rf "${LIB_PATH}/keycloak-js"
+mv "${TMP_DIR}/package" "${LIB_PATH}/keycloak-js"
 
 echo "Done, keycloak-js was updated to ${TAG_NAME}"

@@ -532,6 +532,9 @@
           "value": "realmadmin"
         }
       ],
+      "realmRoles": [
+        "default-roles-taskboard"
+      ],
       "groups": [
         "Realm Admins"
       ]
@@ -550,6 +553,9 @@
           "type": "password",
           "value": "admin"
         }
+      ],
+      "realmRoles": [
+        "default-roles-taskboard"
       ],
       "groups": [
         "Admins",
@@ -570,6 +576,9 @@
           "type": "password",
           "value": "user"
         }
+      ],
+      "realmRoles": [
+        "default-roles-taskboard"
       ],
       "groups": [
         "Users"
